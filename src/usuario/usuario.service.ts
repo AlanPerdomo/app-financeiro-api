@@ -1,8 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { Usuario } from './usuario.entity';
-import { UsuarioCadastrarDto } from './dto/usuario.cadastrar.dto';
+import { Injectable, Inject } from '@nestjs/common';
 import { ResultadoDto } from 'src/dto/resultado.dto';
+import { Repository } from 'typeorm';
+import { UsuarioCadastrarDto } from './dto/usuario.cadastrar.dto';
+import { Usuario } from './usuario.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuarioService {
@@ -10,30 +11,35 @@ export class UsuarioService {
     @Inject('USUARIO_REPOSITORY')
     private usuarioRepository: Repository<Usuario>,
   ) {}
+
   async listar(): Promise<Usuario[]> {
-    return await this.usuarioRepository.find();
+    return this.usuarioRepository.find();
   }
 
   async cadastrar(data: UsuarioCadastrarDto): Promise<ResultadoDto> {
     let usuario = new Usuario();
     usuario.email = data.email;
     usuario.nome = data.nome;
-    usuario.cpf = data.cpf;
+    usuario.password = bcrypt.hashSync(data.senha, 8);
     usuario.telefone = data.telefone;
-    usuario.password = data.password;
+    usuario.cpf = data.cpf;
     return this.usuarioRepository
       .save(usuario)
       .then((result) => {
         return <ResultadoDto>{
           status: true,
-          message: 'usuario cadastrado com sucesso',
+          message: 'Usuário cadastrado com sucesso',
         };
       })
       .catch((error) => {
         return <ResultadoDto>{
           status: false,
-          message: 'Houve um erro ao cadastrar o usuario',
+          message: 'Houve um errro ao cadastrar o usuário',
         };
       });
+  }
+
+  async findOne(email: string): Promise<Usuario | undefined> {
+    return this.usuarioRepository.findOne({ where: { email: email } });
   }
 }

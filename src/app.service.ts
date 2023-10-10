@@ -9,7 +9,7 @@ export class AppService {
   getObject(): any {
     let objeto = {
       id: 1,
-      name: 'John Doe',
+      name: 'Alan',
     };
     return objeto;
   }
