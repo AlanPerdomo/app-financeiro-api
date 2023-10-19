@@ -1,4 +1,6 @@
 import { Servico } from 'src/servico/servico.entity';
+import { Entrada } from 'src/Entradas/entrada.entity';
+import { Despesa } from 'src/Despesas/despesa.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
@@ -23,4 +25,10 @@ export class Usuario {
 
   @OneToMany(() => Servico, (servico) => servico.usuario)
   servicos: Servico[];
+
+  @OneToMany(() => Entrada, (entrada) => entrada.usuario)
+  entradas: Entrada[];
+
+  @OneToMany(() => Despesa, (despesa) => despesa.usuario)
+  despesas: Despesa[];
 }

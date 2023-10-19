@@ -7,7 +7,7 @@ import { servicoProviders } from './servico.providers';
 import { ServicoService } from './servico.service';
 
 @Module({
-  imports: [DatabaseModule, TokenModule],
+  imports: [DatabaseModule, forwardRef(() => TokenModule)],
   controllers: [ServicoController],
   providers: [...servicoProviders, ServicoService],
   exports: [ServicoService],
