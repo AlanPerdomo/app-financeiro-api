@@ -16,13 +16,10 @@ export class Despesa {
   valor: string;
 
   @Column({ length: 255 })
-  data: string;
-
-  @Column({ length: 255 })
-  hora: string;
-
-  @Column({ length: 255 })
   tipo: string;
+
+  @Column({ length: 255 })
+  data: string;
 
   @ManyToOne(() => Usuario, (usuario) => usuario.despesas)
   usuario: Usuario;

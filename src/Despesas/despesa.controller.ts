@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Put,
   Req,
@@ -18,6 +19,7 @@ import { TokenService } from 'src/token/token.service';
 import { Usuario } from 'src/usuario/usuario.entity';
 import { DespesaCadastrarDto } from './dto/despesa.cadastrar.dto';
 import { DespesaService } from './despesa.service';
+import { Despesa } from './despesa.entity';
 
 @Controller('despesa')
 export class DespesaController {
@@ -44,5 +46,23 @@ export class DespesaController {
         HttpStatus.UNAUTHORIZED,
       );
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('listar/:usuarioId')
+  async listarDespesasUsuario(
+    @Param('usuarioId') usuarioId: number,
+  ): Promise<Despesa[]> {
+    const despesas =
+      await this.despesaService.listarDespesasPorUsuario(usuarioId);
+    if (!despesas) {
+      throw new HttpException(
+        {
+          errorMessage: 'Usuário não encontrado ou não possui despesas.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return despesas;
   }
 }

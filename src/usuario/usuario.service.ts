@@ -17,12 +17,32 @@ export class UsuarioService {
   }
 
   async cadastrar(data: UsuarioCadastrarDto): Promise<ResultadoDto> {
+    const email = await this.usuarioRepository.findOne({
+      where: { email: data.email },
+    });
+    const cpf = await this.usuarioRepository.findOne({
+      where: { cpf: data.cpf },
+    });
+    if (email) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Email já existe',
+      };
+    }
+    if (cpf) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'CPF já existe',
+      };
+    }
+
     let usuario = new Usuario();
     usuario.email = data.email;
     usuario.nome = data.nome;
     usuario.password = bcrypt.hashSync(data.senha, 8);
     usuario.telefone = data.telefone;
     usuario.cpf = data.cpf;
+
     return this.usuarioRepository
       .save(usuario)
       .then((result) => {

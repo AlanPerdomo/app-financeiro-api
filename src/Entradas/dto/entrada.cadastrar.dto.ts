@@ -2,8 +2,7 @@ export interface EntradaCadastrarDto {
   titulo: string;
   descricao: string;
   valor: string;
-  data: string;
-  hora: string;
+  data: Date;
   tipo: string;
   usuario: number;
 }
