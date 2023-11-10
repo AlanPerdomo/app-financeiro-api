@@ -62,4 +62,33 @@ export class UsuarioService {
   async findOne(email: string): Promise<Usuario | undefined> {
     return this.usuarioRepository.findOne({ where: { email: email } });
   }
+
+  async obterPorId(id: number): Promise<Usuario | undefined> {
+    return this.usuarioRepository.findOne({ where: { id: id } });
+  }
+
+  async alterarSenha(id: number, novaSenha: string): Promise<ResultadoDto> {
+    try {
+      const usuario = await this.usuarioRepository.findOne({
+        where: { id: id },
+      });
+      if (!usuario) {
+        return <ResultadoDto>{
+          status: false,
+          message: 'Houve um erro ao alterar a senha',
+        };
+      }
+      usuario.password = bcrypt.hashSync(novaSenha, 8);
+      await this.usuarioRepository.save(usuario);
+      return <ResultadoDto>{
+        status: true,
+        message: 'Senha alterada com sucesso',
+      };
+    } catch (error) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao alterar a senha',
+      };
+    }
+  }
 }

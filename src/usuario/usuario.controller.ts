@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Request,
@@ -11,7 +12,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ResultadoDto } from 'src/dto/resultado.dto';
-import { TokenService } from 'src/token/token.service';
 import { UsuarioCadastrarDto } from './dto/usuario.cadastrar.dto';
 import { Usuario } from './usuario.entity';
 import { UsuarioService } from './usuario.service';
@@ -29,9 +29,26 @@ export class UsuarioController {
     return this.usuarioService.listar();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async obterUsuario(@Param('id') id: string): Promise<Usuario> {
+    const numericId: number = parseInt(id, 10); // Parse the string to a number
+    return this.usuarioService.obterPorId(numericId);
+  }
+
   @Post('cadastrar')
   async cadastrar(@Body() data: UsuarioCadastrarDto): Promise<ResultadoDto> {
     return this.usuarioService.cadastrar(data);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put(':id/alterar-senha')
+  async alterarSenha(
+    @Param('id') id: string,
+    @Body('novaSenha') novaSenha: string,
+  ): Promise<ResultadoDto> {
+    const numericId: number = parseInt(id, 10); // Parse the string to a number
+    return this.usuarioService.alterarSenha(numericId, novaSenha);
   }
 
   @UseGuards(AuthGuard('local'))
