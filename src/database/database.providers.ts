@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { createConnection } from 'typeorm';
 
 export const databaseProviders = [
@@ -6,11 +7,11 @@ export const databaseProviders = [
     useFactory: async () =>
       await createConnection({
         type: 'mysql',
-        host: 'localhost',
-        port: 3306,
-        username: 'alan',
-        password: 'alan1234',
-        database: 'appfinanceiro',
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT),
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
       }),

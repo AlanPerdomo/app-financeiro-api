@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Delete,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -23,6 +24,11 @@ export class UsuarioController {
     private authService: AuthService,
   ) {}
 
+  @Post('cadastrar')
+  async cadastrar(@Body() data: UsuarioCadastrarDto): Promise<ResultadoDto> {
+    return this.usuarioService.cadastrar(data);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('listar')
   async listar(): Promise<Usuario[]> {
@@ -36,9 +42,21 @@ export class UsuarioController {
     return this.usuarioService.obterPorId(numericId);
   }
 
-  @Post('cadastrar')
-  async cadastrar(@Body() data: UsuarioCadastrarDto): Promise<ResultadoDto> {
-    return this.usuarioService.cadastrar(data);
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deletar(@Param('id') id: string): Promise<ResultadoDto> {
+    const numericId: number = parseInt(id, 10); // Parse the string to a number
+    return this.usuarioService.deletar(numericId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put(':id/atualizar-dados')
+  async atualizarUsuario(
+    @Param('id') id: string,
+    @Body() data: Partial<Usuario>,
+  ): Promise<ResultadoDto> {
+    const numericId: number = parseInt(id, 10); // Parse the string to a number
+    return this.usuarioService.atualizarUsuario(numericId, data);
   }
 
   @UseGuards(JwtAuthGuard)

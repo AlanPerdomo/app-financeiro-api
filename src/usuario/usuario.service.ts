@@ -67,6 +67,48 @@ export class UsuarioService {
     return this.usuarioRepository.findOne({ where: { id: id } });
   }
 
+  async deletar(id: number): Promise<ResultadoDto> {
+    try {
+      const usuario = await this.usuarioRepository.findOne({
+        where: { id: id },
+      });
+      if (!usuario) {
+        return { message: 'Usuario nao encontrado', status: false };
+      }
+      await this.usuarioRepository.remove(usuario);
+      return { message: 'Usuario deletado com sucesso', status: true };
+    } catch (error) {
+      return { message: 'Houve um erro ao deletar o usuario', status: false };
+    }
+  }
+
+  async atualizarUsuario(
+    id: number,
+    data: Partial<Usuario>,
+  ): Promise<ResultadoDto> {
+    try {
+      const usuario = await this.usuarioRepository.findOne({
+        where: { id: id },
+      });
+      if (!usuario) {
+        return { message: 'Usuario nao encontrado', status: false };
+      }
+      if (data.nome) {
+        usuario.nome = data.nome;
+      }
+      if (data.telefone) {
+        usuario.telefone = data.telefone;
+      }
+      if (data.email) {
+        usuario.email = data.email;
+      }
+      await this.usuarioRepository.save(usuario);
+      return { message: 'Usuario atualizado com sucesso', status: true };
+    } catch (error) {
+      return { message: 'Houve um erro ao atualizar o usuario', status: false };
+    }
+  }
+
   async alterarSenha(id: number, novaSenha: string): Promise<ResultadoDto> {
     try {
       const usuario = await this.usuarioRepository.findOne({
