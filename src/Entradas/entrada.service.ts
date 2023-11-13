@@ -52,4 +52,42 @@ export class EntradaService {
       throw error;
     }
   }
+
+  async remover(id: number): Promise<ResultadoDto> {
+    try {
+      const entrada = await this.entradaRepository.findOne({
+        where: { id: id },
+      });
+      if (!entrada) {
+        return <ResultadoDto>{
+          status: false,
+          message: 'Entrada não encontrada',
+        };
+      }
+      await this.entradaRepository.remove(entrada);
+      return <ResultadoDto>{
+        status: true,
+        message: 'Entrada removida com sucesso',
+      };
+    } catch (error) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao remover a entrada',
+      };
+    }
+  }
+  async removerTodos(): Promise<ResultadoDto> {
+    try {
+      await this.entradaRepository.delete({});
+      return <ResultadoDto>{
+        status: true,
+        message: 'Entradas removidas com sucesso',
+      };
+    } catch (error) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao remover as entradas',
+      };
+    }
+  }
 }

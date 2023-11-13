@@ -10,6 +10,7 @@ import {
   Request,
   UseGuards,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'src/auth/auth.service';
@@ -65,5 +66,17 @@ export class EntradaController {
       );
     }
     return entradas;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('remover/:id')
+  async remover(@Param('id') id: number): Promise<ResultadoDto> {
+    return this.entradaService.remover(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('remover')
+  async removerTodos(): Promise<ResultadoDto> {
+    return this.entradaService.removerTodos();
   }
 }

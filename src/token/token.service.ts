@@ -58,6 +58,9 @@ export class TokenService {
   }
 
   async getUsuarioByToken(token: string): Promise<Usuario> {
+    if (!token) {
+      return null;
+    }
     token = token.replace('Bearer ', '').trim();
     let objToken: Token = await this.tokenRepository.findOne({
       where: { hash: token },
@@ -66,7 +69,6 @@ export class TokenService {
       let usuario = await this.usuarioService.findOne(objToken.username);
       return usuario;
     } else {
-      //é uma requisição inválida
       return null;
     }
   }

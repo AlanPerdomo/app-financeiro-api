@@ -28,7 +28,7 @@ export class AuthService {
     this.tokenService.save(token, user.email);
     return {
       ID: user.id,
-      access_token: token,
+      token: token,
     };
   }
 
