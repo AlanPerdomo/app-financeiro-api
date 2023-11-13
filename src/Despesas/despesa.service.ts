@@ -52,4 +52,68 @@ export class DespesaService {
       throw error;
     }
   }
+  async remover(id: number): Promise<ResultadoDto> {
+    try {
+      const despesa = await this.despesaRepository.findOne({
+        where: { id: id },
+      });
+      if (!despesa) {
+        return <ResultadoDto>{
+          status: false,
+          message: 'Entrada não encontrada',
+        };
+      }
+      await this.despesaRepository.remove(despesa);
+      return <ResultadoDto>{
+        status: true,
+        message: 'Despesa removida com sucesso',
+      };
+    } catch (error) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao remover a entrada',
+      };
+    }
+  }
+  async removerTodosPorUsuario(id: number): Promise<ResultadoDto> {
+    try {
+      const despesas = await this.despesaRepository.find({
+        where: { usuario: { id } },
+      });
+
+      if (despesas.length === 0) {
+        return <ResultadoDto>{
+          status: false,
+          message: 'Nenhuma despesa encontrada para o usuário informado',
+        };
+      }
+
+      await this.despesaRepository.remove(despesas);
+
+      return <ResultadoDto>{
+        status: true,
+        message: 'Despesas removidas com sucesso',
+      };
+    } catch (error) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao remover as despesas',
+      };
+    }
+  }
+
+  async removerTodos(): Promise<ResultadoDto> {
+    try {
+      await this.despesaRepository.delete({});
+      return <ResultadoDto>{
+        status: true,
+        message: 'Despesas removidas com sucesso',
+      };
+    } catch (error) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao remover as entradas',
+      };
+    }
+  }
 }

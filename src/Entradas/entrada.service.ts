@@ -76,6 +76,32 @@ export class EntradaService {
       };
     }
   }
+  async removerTodosPorUsuario(id: number): Promise<ResultadoDto> {
+    try {
+      const entradas = await this.entradaRepository.find({
+        where: { usuario: { id } },
+      });
+
+      if (entradas.length === 0) {
+        return <ResultadoDto>{
+          status: false,
+          message: 'Nenhuma entrada encontrada para o usuário informado',
+        };
+      }
+
+      await this.entradaRepository.remove(entradas);
+
+      return <ResultadoDto>{
+        status: true,
+        message: 'entradas removidas com sucesso',
+      };
+    } catch (error) {
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao remover as entradas',
+      };
+    }
+  }
   async removerTodos(): Promise<ResultadoDto> {
     try {
       await this.entradaRepository.delete({});

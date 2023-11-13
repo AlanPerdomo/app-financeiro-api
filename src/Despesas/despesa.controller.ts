@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -64,5 +65,23 @@ export class DespesaController {
       );
     }
     return despesas;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('remover/:id')
+  async remover(@Param('id') id: number): Promise<ResultadoDto> {
+    return this.despesaService.remover(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('remover/usuario/:id')
+  async removerTodosPorUsuario(@Param('id') id: number): Promise<ResultadoDto> {
+    return this.despesaService.removerTodosPorUsuario(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('remover')
+  async removerTodos(): Promise<ResultadoDto> {
+    return this.despesaService.removerTodos();
   }
 }

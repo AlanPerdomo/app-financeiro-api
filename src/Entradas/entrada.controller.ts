@@ -50,12 +50,11 @@ export class EntradaController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('listar/:usuarioId')
+  @Get('listar/:id')
   async listarEntradasUsuario(
-    @Param('usuarioId') usuarioId: number,
+    @Param('id') id: number,
   ): Promise<Entrada[] | undefined> {
-    const entradas =
-      await this.entradaService.listarEntradasPorUsuario(usuarioId);
+    const entradas = await this.entradaService.listarEntradasPorUsuario(id);
 
     if (!entradas) {
       throw new HttpException(
@@ -72,6 +71,12 @@ export class EntradaController {
   @Delete('remover/:id')
   async remover(@Param('id') id: number): Promise<ResultadoDto> {
     return this.entradaService.remover(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('remover/usuario/:id')
+  async removerTodosPorUsuario(@Param('id') id: number): Promise<ResultadoDto> {
+    return this.entradaService.removerTodosPorUsuario(id);
   }
 
   @UseGuards(JwtAuthGuard)
