@@ -21,6 +21,8 @@ export class Despesa {
   @Column({ length: 255 })
   data: string;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.despesas)
+  @ManyToOne(() => Usuario, (usuario) => usuario.despesas, {
+    onDelete: 'CASCADE',
+  })
   usuario: Usuario;
 }

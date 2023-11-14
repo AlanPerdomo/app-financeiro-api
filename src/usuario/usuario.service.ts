@@ -71,14 +71,25 @@ export class UsuarioService {
     try {
       const usuario = await this.usuarioRepository.findOne({
         where: { id: id },
+        relations: ['entradas', 'despesas'],
       });
       if (!usuario) {
-        return { message: 'Usuario nao encontrado', status: false };
+        return <ResultadoDto>{
+          status: false,
+          message: 'Usuario não encontrado',
+        };
       }
       await this.usuarioRepository.remove(usuario);
-      return { message: 'Usuario deletado com sucesso', status: true };
+      return <ResultadoDto>{
+        status: true,
+        message: 'Usuario removido com sucesso',
+      };
     } catch (error) {
-      return { message: 'Houve um erro ao deletar o usuario', status: false };
+      console.log(error);
+      return <ResultadoDto>{
+        status: false,
+        message: 'Houve um erro ao remover o usuario',
+      };
     }
   }
 

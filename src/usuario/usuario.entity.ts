@@ -23,12 +23,18 @@ export class Usuario {
   @Column({ length: 14 })
   cpf: string;
 
-  @OneToMany(() => Servico, (servico) => servico.usuario)
+  @OneToMany(() => Servico, (servico) => servico.usuario, {
+    cascade: true,
+  })
   servicos: Servico[];
 
-  @OneToMany(() => Entrada, (entrada) => entrada.usuario)
+  @OneToMany(() => Entrada, (entrada) => entrada.usuario, {
+    cascade: true,
+  })
   entradas: Entrada[];
 
-  @OneToMany(() => Despesa, (despesa) => despesa.usuario)
+  @OneToMany(() => Despesa, (despesa) => despesa.usuario, {
+    cascade: true,
+  })
   despesas: Despesa[];
 }

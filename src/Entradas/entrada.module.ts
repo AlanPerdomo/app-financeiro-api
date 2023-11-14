@@ -7,7 +7,7 @@ import { entradaProviders } from './entrada.providers';
 import { EntradaService } from './entrada.service';
 
 @Module({
-  imports: [DatabaseModule, forwardRef(() => TokenModule)],
+  imports: [DatabaseModule, TokenModule],
   controllers: [EntradaController],
   providers: [...entradaProviders, EntradaService],
   exports: [EntradaService],
